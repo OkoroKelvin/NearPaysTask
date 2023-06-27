@@ -3,33 +3,39 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './User';
 import { UserType } from './dtos/userType';
+import { scrypt as _scrypt} from 'crypto';
+import { promisify } from 'util';
+const scrypt = promisify(_scrypt);
+
 
 @Injectable()
 export class UsersService {
     constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-    async register(email: string, password: string, name: string, userType: UserType){
-
-        const foundUser = await this.repo.findOneBy({email });
-
-        if(foundUser){
-            throw new BadRequestException("User already exist")
-        }
-
+    create (email: string, password: string, name: string, userType: UserType){
         const user = this.repo.create({email,password,name,userType});
-
         return this.repo.save(user);
     }
 
-    async loginAsSingle(email: string, password: string){
+    find(email: string) {
+        return this.repo.findOneBy({ email });
+    }
+
+    async loginAsSingle(email: string, password: string) {
 
         const foundUser = await this.repo.findOneBy({email });
+
+        
+        const [salt, storedHash] = foundUser.password.split('.');
+
+        const hash = (await scrypt(password, salt, 32)) as Buffer;
+
 
         if(!foundUser){
             throw new BadRequestException("User does not exist, please register")
         }
 
-        if(foundUser.password != password){
+        if( storedHash != hash.toString('hex')){
             throw new UnauthorizedException("Wrong Password")
         }
 
@@ -45,11 +51,15 @@ export class UsersService {
 
         const foundUser = await this.repo.findOneBy({email });
 
+        const [salt, storedHash] = foundUser.password.split('.');
+
+        const hash = (await scrypt(password, salt, 32)) as Buffer;
+
         if(!foundUser){
             throw new BadRequestException("User does not exist, please register")
         }
 
-        if(foundUser.password != password){
+        if( storedHash != hash.toString('hex')){
             throw new UnauthorizedException("Wrong Password")
         }
 
