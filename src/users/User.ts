@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { UserType } from "./dtos/userType";
+import { Exclude } from "class-transformer";
 
 
 @Entity()
@@ -13,6 +14,7 @@ export class User{
       })
     email: string;
 
+    @Exclude()
     @Column()
     password: string;
 
