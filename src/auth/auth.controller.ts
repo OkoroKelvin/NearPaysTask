@@ -25,6 +25,4 @@ export class AuthController {
   registerMerchant(@Body() body:UserDto) {
     return this.authService.registerMerchant(body); 
   }
-
-
 }
