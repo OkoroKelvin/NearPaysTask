@@ -8,9 +8,9 @@ export class ItemsController {
 
     }
 
-    @HttpCode(HttpStatus.OK)
-    @Post('create-item')
-    createItem(@Body() body:ItemDto){
-        return this.itemService.create(body.name,body.category)
-    }
+    // @HttpCode(HttpStatus.OK)
+    // @Post('create-item')
+    // createItem(@Body() body:ItemDto){
+    //     return this.itemService.create(body.name,body.category)
+    // }
 }
