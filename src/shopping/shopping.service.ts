@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Shopping } from './Shopping';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,6 +23,15 @@ export class ShoppingService {
         return "Deleted"
     }
 
-    async userCanUpdateItem()
+    async userCanUpdateShopingList(id:number, attrs:Partial<Shopping>){
+        const foundShop = await this.repo.findOneBy({id});
+        if(!foundShop){
+            throw new NotFoundException("Shopping list not found")
+        }
+
+        Object.assign(foundShop, attrs);
+        return this.repo.save(foundShop);
+
+    }
 
 }
