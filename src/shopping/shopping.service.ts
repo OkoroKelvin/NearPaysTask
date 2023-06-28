@@ -34,4 +34,8 @@ export class ShoppingService {
 
     }
 
+    async userCanGetAllIsShoppingList(userId:number){
+        return this.repo.findBy({userId})
+    }
+
 }
