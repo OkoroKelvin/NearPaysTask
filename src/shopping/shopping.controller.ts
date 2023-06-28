@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { ShoppingService } from './shopping.service';
 import { ItemsService } from 'src/items/items.service';
 import { ShoppingDto } from './ShoppingDto';
@@ -32,8 +32,10 @@ export class ShoppingController {
           return this.shoppinService.userCanUpdateShopingList(parseInt(id),body)
       }
 
-      findAllShippingListByaUser(@Param('id') id:String){
-        
+      @HttpCode(HttpStatus.OK)
+      @Get('/:id')
+      findAllShippingListByaUser(@Param('id') id:string){
+        return this.shoppinService.userCanGetAllIsShoppingList(parseInt(id))
       }
 
 }
