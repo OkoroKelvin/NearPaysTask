@@ -7,6 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/User';
 import { DataSource } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
+import { ShoppingModule } from './shopping/shopping.module';
+import { ItemsModule } from './items/items.module';
+import { Shopping } from './shopping/Shopping';
+import { Item } from './items/Item';
 
 
 @Module({
@@ -21,12 +25,14 @@ import { AuthModule } from './auth/auth.module';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_NAME'),
-          entities: [User],
+          entities: [User,Shopping,Item],
           synchronize: true,
     }),
     inject: [ConfigService],
 }),
     AuthModule,
+    ShoppingModule,
+    ItemsModule,
    
   ],
   controllers: [AppController],
